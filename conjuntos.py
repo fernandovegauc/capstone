@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import xlrd
+import math
+
 #Parametros
 #Cantidad de cursos
 m = 62
@@ -100,17 +102,16 @@ for x in c_id:
 def calcular(inicio,final, bloques):
     rangos = []
     for x in range(1,25):
-
+        
         if inicio in range(bloques[x][0],bloques[x][1]):
 
             b1 = x
+            
 
-        if final in range(bloques[x][0],bloques[x][1]):
-            b2 = x
-
+       
     
-    for y in range(b1, b2+1):
-        rangos.append(y)
+    
+    rangos.append(b1)
    
     return rangos
 
@@ -144,6 +145,13 @@ for i in courses_time.index:
     inicio = courses_time['start'][i]
     final = courses_time['length'][i] + inicio
     rangos = calcular(inicio, final, bloques)
+    duracion = math.ceil(courses_time['length'][i]/6)
+    count = 0
+    while len(rangos) != duracion: 
+        rangos.append(rangos[count] + 1)
+        count += 1
+
+
     day = days_function(courses_time['days'][i])
     bloques_clase[courses_time['class_id'][i]].append([day,rangos])
 
