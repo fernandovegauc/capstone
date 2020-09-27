@@ -10,7 +10,6 @@ m = 62
 c = 100
 #Conjunto dias de semana
 S = ['L', 'M', 'W', 'J','V','S','D']
-
 ##se leen los archivos y se crean los conjuntos como arreglos (listas de listas)
 room = pd.read_excel('room.xls')
 #Arreglar columna days con 0 
@@ -95,7 +94,7 @@ primeros_bloques = dict()
 c_id = courses_time['class_id']
 c_id = np.unique(c_id)
 for x in c_id:
-    bloques_clase[x] = []
+    bloques_clase[x] = []     #M este es el conjunto Vc
     duracion_clase[x] = []
     primeros_bloques[x] = []
 
@@ -167,9 +166,9 @@ for i in bloques_clase:
         duracion_clase[i] = len(x[1]) 
 
 #print(primeros_bloques)
-print(primeros_bloques)
-
-
+#print(primeros_bloques)
+#print(c_id)
+#print(bloques_clase)
 
 
 
