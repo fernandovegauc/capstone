@@ -158,7 +158,7 @@ for i in courses_time.index:
 # Conjunto duracion clase
 for i in bloques_clase:
     for x in bloques_clase[i]:
-        duracion_clase[i] = len(x[1]) - 1
+        duracion_clase[i] = len(x[1]) 
 
 print(duracion_clase[707])
 print(bloques_clase[707])
