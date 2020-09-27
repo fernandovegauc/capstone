@@ -86,50 +86,74 @@ for i in range(1,25):
     count += 1
 #acá se define el subconjunto de los bloques para cada clase
 bloques_clase = dict()
+duracion_clase = dict()
 #Poblar 
 
 c_id = courses_time['class_id']
 c_id = np.unique(c_id)
 for x in c_id:
     bloques_clase[x] = []
-
+    duracion_clase[x] = []
 
 
 
 def calcular(inicio,final, bloques):
     rangos = []
     for x in range(1,25):
-        
+
         if inicio in range(bloques[x][0],bloques[x][1]):
+
             b1 = x
 
-        if final in range(bloques[x][0],bloques[x][1] + 1):
+        if final in range(bloques[x][0],bloques[x][1]):
             b2 = x
 
     
-    for x in range(b1, b2+1):
-        rangos.append(x)
+    for y in range(b1, b2+1):
+        rangos.append(y)
    
     return rangos
+
+def days_function(semana):
+    if semana ==  1000000:
+        day = 'L'
+        return day
+    if semana == 100000:
+        day = 'M'
+        return day
+    if  semana == 10000:
+        day = 'W'
+        return day
+    if semana == 1000:
+        day = 'J'
+        return day
+    if semana == 100:
+        day = 'V'
+        return day
+       
+    if semana == 10:
+        day = 'S'
+        return day
+    if semana == 1:
+        day = "D"
+        return day
+
 
 for i in courses_time.index:
     
     inicio = courses_time['start'][i]
     final = courses_time['length'][i] + inicio
     rangos = calcular(inicio, final, bloques)
-    bloques_clase[courses_time['class_id'][i]].append(rangos)
+    day = days_function(courses_time['days'][i])
+    bloques_clase[courses_time['class_id'][i]].append([day,rangos])
 
+# Conjunto duracion clase
+for i in bloques_clase:
+    for x in bloques_clase[i]:
+        duracion_clase[i] = len(x[1]) - 1
 
-    
-   
-print(bloques_clase)
-        
-
-
-
-
-
-
+print(duracion_clase[707])
+print(bloques_clase[707])
 
 
 
