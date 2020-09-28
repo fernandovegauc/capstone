@@ -8,9 +8,10 @@ Sd=range(58)
 S=range(20)
 S1=range(2)
 S2=range(2)
-Rc=range(2)
-Sc=range(4)
-R=range(20)
+#Rc=range(2)
+Rc=salas_factibles
+Cr=class_id
+#R=range(20)
 #C=range(10)
 C=c_id
 M=range(8)
@@ -33,15 +34,17 @@ sdnvc=range(3)
 #         for s in S:
 #             xs_acs[a,c,s]=m.addVar(obj=-1, vtype=GRB.BINARY,name="xsa"+str(a)+"c"+str(c)+"s"+str(s))
 y_cvs={}
-for c in C:
-    for v in range(len(Sc[c][0][1])):#revisar otras clases
-        for s in S:
-            y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="yc" + str(c) + "v" + str(v) + "s" + str(s))
-# yr_crs={}
-# for c in C:
-#     for r in R:
-#         for s in S:
-#             yr_crs[c,r,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="yrc" + str(c) + "r" + str(r) + "s" + str(s))
+# for c in C[0:10]:
+#     for s in range(len(Sc[c])):
+#         for v in range(len(Sc[c][s][1])):
+#             y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="yc" + str(c) + "v" + str(v) + "s" + str(s))
+#             print(y_cvs[c,v,s])
+yr_crs={}
+for c in Cr[1]:
+    for r in range(len(Rc[c])):
+        for s in range(len(Sc[c])):
+            print(Sc[c])
+            yr_crs[c,r,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="yrc" + str(c) + "r" + str(r) + "s" + str(s))
 
 m.update()
 m.ModelSense = GRB.MINIMIZE
@@ -50,13 +53,10 @@ m.ModelSense = GRB.MINIMIZE
 #restriccion 1
 
 #restriccion 3 (OK): programar eventos de una clase en exactamente un bloque horario entre los factibles
-#for c in C:
-    #for v in range(len(V[c][0][1])):
-        #m.addConstr(quicksum(y_cvs[c,v,s] for s in SO) == 1)#es un Sc en realidad
+# for c in C:
+#     for v in range(len(Vc)):
+#         m.addConstr(quicksum(y_cvs[c,v,s] for s in range(len(Sc[c]))) == 1) #es un Sc en realidad
 
-for c in C:
-    for v in range(len(V[c][0][1])):
-        m.addConstr(quicksum(y_cvs[c,v,s] for s in S0) == 1) #es un Sc en realidad
 
 
 #restriccion 4: Asignar la frecuencia semanal.
@@ -131,8 +131,8 @@ m.optimize()
 #     if v.varName=="yc1v1s1":
 #         print(v.varName, v.x)
 
-print(C[0])
-print(V[1])
-print(V[40])
+# print(C[0])
+# print(V[1])
+# print(V[40])
 
 
