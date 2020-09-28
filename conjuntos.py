@@ -89,6 +89,7 @@ for i in range(1,25):
 bloques_clase = dict()
 duracion_clase = dict()
 primeros_bloques = dict()
+conjunto_V =dict()
 #Poblar 
 
 c_id = courses_time['class_id']
@@ -107,10 +108,10 @@ def calcular(inicio,final, bloques):
         if inicio in range(bloques[x][0],bloques[x][1]):
 
             b1 = x
-            
 
-       
-    
+
+
+
     
     rangos.append(b1)
    
@@ -157,13 +158,17 @@ for i in courses_time.index:
         count += 1
 
 
-    
+
     bloques_clase[courses_time['class_id'][i]].append([day,rangos])
 
 # Conjunto duracion clase
 for i in bloques_clase:
     for x in bloques_clase[i]:
         duracion_clase[i] = len(x[1]) 
+
+#conjunto_v lista con cuantos eventos teine una clase
+for i in duracion_clase:
+    conjunto_V[i] = list(range(duracion_clase[i]))
 
 #print(primeros_bloques)
 #print(primeros_bloques)
