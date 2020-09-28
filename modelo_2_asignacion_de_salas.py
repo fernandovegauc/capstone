@@ -18,7 +18,7 @@ lecM=range(6)
 A=range(10)
 #V=range(20)
 #Vc=range(2)
-V=bloques_clase
+Sc=bloques_clase
 initc=range(2)
 slot=range(10)
 sdnvc=range(3)
@@ -34,7 +34,7 @@ sdnvc=range(3)
 #             xs_acs[a,c,s]=m.addVar(obj=-1, vtype=GRB.BINARY,name="xsa"+str(a)+"c"+str(c)+"s"+str(s))
 y_cvs={}
 for c in C:
-    for v in range(len(V[c][0][1])):
+    for v in range(len(Sc[c][0][1])):#revisar otras clases
         for s in S:
             y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="yc" + str(c) + "v" + str(v) + "s" + str(s))
 # yr_crs={}
@@ -56,7 +56,7 @@ m.ModelSense = GRB.MINIMIZE
 
 for c in C:
     for v in range(len(V[c][0][1])):
-        m.addConstr(quicksum(y_cvs[c,v,s] for s in SO) == 1) #es un Sc en realidad
+        m.addConstr(quicksum(y_cvs[c,v,s] for s in S0) == 1) #es un Sc en realidad
 
 
 #restriccion 4: Asignar la frecuencia semanal.
@@ -131,5 +131,8 @@ m.optimize()
 #     if v.varName=="yc1v1s1":
 #         print(v.varName, v.x)
 
-print(C[0:10])
+print(C[0])
+print(V[1])
+print(V[40])
+
 

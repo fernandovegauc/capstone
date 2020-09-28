@@ -320,3 +320,72 @@ Solution count 1: 3894
 
 Optimal solution found (tolerance 1.00e-04)
 Best objective 3.894000000000e+03, best bound 3.894000000000e+03, gap 0.0000%
+
+Gurobi 8.0.1 (mac64, Python) logging started Sun Sep 27 21:48:57 2020
+
+Academic license - for non-commercial use only
+Optimize a model with 3894 rows, 77880 columns and 7788 nonzeros
+Variable types: 0 continuous, 77880 integer (77880 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 3894.0000000
+Presolve removed 3894 rows and 77880 columns
+Presolve time: 0.04s
+Presolve: All rows and columns removed
+
+Explored 0 nodes (0 simplex iterations) in 0.07 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 3894 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.894000000000e+03, best bound 3.894000000000e+03, gap 0.0000%
+
+Gurobi 8.0.1 (mac64, Python) logging started Sun Sep 27 21:49:24 2020
+
+Academic license - for non-commercial use only
+Optimize a model with 3894 rows, 77880 columns and 7788 nonzeros
+Variable types: 0 continuous, 77880 integer (77880 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 3894.0000000
+Presolve removed 3894 rows and 77880 columns
+Presolve time: 0.02s
+Presolve: All rows and columns removed
+
+Explored 0 nodes (0 simplex iterations) in 0.04 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 3894 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.894000000000e+03, best bound 3.894000000000e+03, gap 0.0000%
+
+Gurobi 8.0.1 (mac64, Python) logging started Sun Sep 27 21:52:13 2020
+
+Academic license - for non-commercial use only
+Optimize a model with 3894 rows, 77880 columns and 7788 nonzeros
+Variable types: 0 continuous, 77880 integer (77880 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 3894.0000000
+Presolve removed 3894 rows and 77880 columns
+Presolve time: 0.04s
+Presolve: All rows and columns removed
+
+Explored 0 nodes (0 simplex iterations) in 0.07 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 3894 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 3.894000000000e+03, best bound 3.894000000000e+03, gap 0.0000%
