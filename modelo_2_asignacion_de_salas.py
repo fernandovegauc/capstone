@@ -7,8 +7,10 @@ Rc=salas_factibles #diccionario de clases que requieren sala con el formato {lla
 Cr=class_id #lista de id de clases que requieren salas
 C=c_id #lista de id de clases de todas las clases
 Sc=bloques_clase#diccionario de clases que indica sus bloques posibles con el formato {llave de la clase: lista de horarios factibles clase}
-numero_clases_instancia_con_sala=len(Cr)
-numero_clases_instancia=len(C)
+print(len(Cr))
+print(len(C))
+numero_clases_instancia_con_sala=5
+numero_clases_instancia=8
 
 #formaremos el conjunto Vc en una lista de listas por ahora ( no sirvio :( )
 # Vc=[]
@@ -159,9 +161,9 @@ for c in Cr[0:numero_clases_instancia_con_sala]:
 
 #restriccion 8: Asignar sala a una clase en un bloque horario determinada
 
-#for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
- #   for s in range(len(Sc[c])):
-  #      m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
+for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
+    for s in range(len(Sc[c])):
+        m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
 
 
 
