@@ -22,7 +22,7 @@ rooms = room.to_numpy()
 #Keys(course_id, config_id, subpart_id, class_id, class_limit, class_room, class_parent, days, 
 # start length, weeks, penalty)
 courses_time = pd.read_csv('iku-fal17/cursos_tiempo.csv',delimiter=';')
-courses_time = courses_time.drop(['Unnamed: 12','Unnamed: 13'], axis = 1)
+#courses_time = courses_time.drop(['Unnamed: 12','Unnamed: 13'], axis = 1)
 
 #Array de TODA la informacion de los cursos por disponibilidad
 courses = courses_time.to_numpy()
@@ -163,10 +163,9 @@ for i in duracion_clase:
 #    print(bloques_clase[i])
 #    for x in bloques_clase[i]:
 
-print(primeros_bloques)
+#print(primeros_bloques)
 #print(primeros_bloques)
 #print(c_id)
-
 
 
 

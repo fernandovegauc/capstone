@@ -1,5 +1,5 @@
 from gurobipy import *
-from conjuntos import *
+from conjuntos_arreglados import *
 import numpy as np
 
 
@@ -7,8 +7,8 @@ Rc=salas_factibles #diccionario de clases que requieren sala con el formato {lla
 Cr=class_id #lista de id de clases que requieren salas
 C=c_id #lista de id de clases de todas las clases
 Sc=bloques_clase#diccionario de clases que indica sus bloques posibles con el formato {llave de la clase: lista de horarios factibles clase}
-numero_clases_instancia_con_sala=30
-numero_clases_instancia=33
+numero_clases_instancia_con_sala=len(Cr)
+numero_clases_instancia=len(C)
 
 #formaremos el conjunto Vc en una lista de listas por ahora ( no sirvio :( )
 # Vc=[]
@@ -159,9 +159,9 @@ for c in Cr[0:numero_clases_instancia_con_sala]:
 
 #restriccion 8: Asignar sala a una clase en un bloque horario determinada
 
-for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
-    for s in range(len(Sc[c])):
-        m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
+#for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
+ #   for s in range(len(Sc[c])):
+  #      m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
 
 
 
@@ -206,12 +206,12 @@ m.optimize()
 #for v in m.getVars():
     #print('%s %g' % (v.varName, v.x))
 
-for v in m.getVars():
-    if v.x==1:
-        print('%s %g' % (v.varName, v.x))
-for v in m.getVars():
-    if v.x==0:
-        print('%s %g' % (v.varName, v.x))
+#for v in m.getVars():
+ #   if v.x==1:
+       # print('%s %g' % (v.varName, v.x))
+#for v in m.getVars():
+ #   if v.x==0:
+        #print('%s %g' % (v.varName, v.x))
 # #print(S)
 #para obtener el valor de una varibla particular:
 # for v in m.getVars():
@@ -237,9 +237,4 @@ for v in m.getVars():
 #     print("patrones clase ",c )
 #     print(Sc[c])
 
-print(Sc[4][7])
-print(Sc[5][8])
-print(Sc[6][6])
-
-print(Rc)
 
