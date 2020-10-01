@@ -1,29 +1,57 @@
 from gurobipy import *
 from conjuntos import *
 import numpy as np
-m=Model("mip1")
-D=range(7)
-SO=range(2)
-Sd=range(58)
-S=bloques
-S1=range(2)
-S2=range(2)
-#nvc=duracion_clase
-#Rc=range(2)
+
 
 Rc=salas_factibles #diccionario de clases que requieren sala con el formato {llave de la clase: lista de salas factibles clase}
 Cr=class_id #lista de id de clases que requieren salas
-C=c_id#lista de id de clases de todas las clases
-M=range(8)
-lecM=range(6)
-A=range(10)
-#V=range(20)
-#Vc=range(2)
+C=c_id #lista de id de clases de todas las clases
 Sc=bloques_clase#diccionario de clases que indica sus bloques posibles con el formato {llave de la clase: lista de horarios factibles clase}
-initc=range(2)
-slot=range(10)
-sdnvc=range(3)
-numero_clases_instancia=10
+numero_clases_instancia_con_sala=30
+numero_clases_instancia=33
+
+#formaremos el conjunto Vc en una lista de listas por ahora ( no sirvio :( )
+# Vc=[]
+# for c in C[0:13]:
+#     clasec=[]
+#     for s in range(len(Sc[c])):
+#         for v in range(len(Sc[c][s][1])):
+#             if (str(Sc[c][s][0])+str(Sc[c][s][1][v])) not in clasec:
+#                 clasec.append(str(Sc[c][s][0])+str(Sc[c][s][1][v]))
+#     Vc.append(clasec)
+#ahora se creará un subconjunto para las patrones que tienen tope de horario con el patrón i
+
+tope=[]
+for cf in Cr[0:numero_clases_instancia_con_sala]:
+    clase=[]
+    for s in range(len(Sc[cf])):#Sc[4] = [['L', [7, 8, 9, 10, 11]], ['M', [7, 8, 9, 10, 11]], ['W', [7, 8, 9, 10, 11]],...]
+        patron=[]
+        dia=Sc[cf][s][0] #asi s tomas los valores s = ['L', [7, 8, 9, 10, 11]]  , despues s = ['M', [7, 8, 9, 10, 11]] , etc
+        modulos=Sc[cf][s][1]
+        #ahora debo ir revisando en todos los patrones y agrego si hay traslape
+        for cprueba in Cr[0:numero_clases_instancia_con_sala]:
+            for sprueba in range(len(Sc[cprueba])):
+                if (dia==Sc[cprueba][sprueba][0]):
+                    contador=0
+                    for m in (Sc[cprueba][sprueba][1]):
+                        if (m in modulos) and (contador==0):#quiere decir que hay calce de horarios
+                             if (cf!=cprueba) or (s!=sprueba):
+                                patron.append([cprueba,sprueba])
+                                contador=contador+1
+        clase.append(patron)
+    tope.append(clase)
+
+
+
+
+
+
+
+
+
+
+
+
 # print(Sc[296])
 # print(Sc[297])
 # print(Sc[350])
@@ -36,28 +64,21 @@ numero_clases_instancia=10
 #     for c in A:
 #         for s in S:
 #             xs_acs[a,c,s]=m.addVar(obj=-1, vtype=GRB.BINARY,name="xsa"+str(a)+"c"+str(c)+"s"+str(s))
+
+#se crean las variables
+
+m=Model("mip1")
 y_cvs={}
 for c in C[0:numero_clases_instancia]:
     for s in range(len(Sc[c])):#sub indice s es el numero de patron horario factible para clase c.
         for v in (Sc[c][s][1]):#sub indice v es el numero de modulo del patron s factible para clase c.
             y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yc=" + str(c) + ";v=" + Sc[c][s][0]+str(v) + ";s" + str(s))
-# yr_crs={}
-# for c in Cr[0:numero_clases_instancia]:
-#     for r in Rc[c]:#sub indice r es id de la sala factible para la clase s.
-#         for s in range(len(Sc[c])): #sub indice s es el numero de patron horario factible para clase c.
-#             yr_crs[c,r,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yrc=" + str(c) + ";r=" + str(r) + ";s=" + str(s))
 
-yr_crv={}
-for c in Cr[0:numero_clases_instancia]:
+yr_crs={}
+for c in Cr[0:numero_clases_instancia_con_sala]:
     for r in Rc[c]:#sub indice r es id de la sala factible para la clase s.
-        for v in (Vc[c]) #sub indice s es el numero de patron horario factible para clase c.
-            yr_crv[c,r,v] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yrc=" + str(c) + ";r=" + str(r) + ";v=" + str(v))
-
-
-
-
-
-
+        for s in range(len(Sc[c])): #sub indice s es el numero de patron horario factible para clase c.
+            yr_crs[c,r,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yrc=" + str(c) + ";r=" + str(r) + ";s=" + str(s))
 
 
 m.update()
@@ -107,19 +128,40 @@ for c in C[0:numero_clases_instancia]:
 #                     nvc=dict....aqui se debe reconocer el parametro nvc
 #                     m.addConstr(quicksum(y_cvs[c,v,s] for v in range(vi+1,vi+nvc) for s in range(so+1,so+nvc)) -(nvc-1)*y_cvs[c,vi,so] == 0)
 # restriccion 7: No tener superposicion horaria para las salas, un curso en la sala en ese bloque
-for r in R:
-    for s in Sc[]:
-        m.addConstr(quicksum(yr_crs[c,r,Sc[c][s][1][i]] for c in C for r in R) <= 1)
+# for r in R:
+#     for s in Sc[]:
+#         m.addConstr(quicksum(yr_crs[c,r,Sc[c][s][1][i]] for c in C for r in R) <= 1)
+
+count=-1
+for c in Cr[0:numero_clases_instancia_con_sala]:
+    count+=1
+    for s in range(len(Sc[c])):
+        for r in Rc[c]:
+            a = yr_crs[c, r, s]
+            for lista in tope[count][s]:
+                if r in Rc[lista[0]]:
+                    a=a+yr_crs[lista[0],r,lista[1]]
+            m.addConstr(a<=1)
+
+
+
+
+
+
+        #ahora reviso en los conjuntos c,s con tope para el c y el s actual, procurando revisar si r es factible para el
+
+
+
+
+
+
 
 
 #restriccion 8: Asignar sala a una clase en un bloque horario determinada
 
-# for c in Cr[0:6]: #estas son las clases que requieren sala
-#      for s in range(len(Sc[c])):
-#          m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
-# #        m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == quicksum(y_cvs[c,v,s] for v in (Sc[c][s][1])))
-# #
-
+for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
+    for s in range(len(Sc[c])):
+        m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
 
 
 
@@ -170,7 +212,7 @@ for v in m.getVars():
 for v in m.getVars():
     if v.x==0:
         print('%s %g' % (v.varName, v.x))
-#print(S)
+# #print(S)
 #para obtener el valor de una varibla particular:
 # for v in m.getVars():
 #     if v.varName=="yc1v1s1":
@@ -185,3 +227,19 @@ for v in m.getVars():
 # print(Sc[4])
 # print(len(Sc[4][1][1]))
 #print(C)
+# for i in range(20):
+#     print(Sc[i+1])
+# for i in Cr[0:20]:
+#     print("salas clase",i,":")
+#     print(Rc[i])
+
+# for c in C[0:numero_clases_instancia]:
+#     print("patrones clase ",c )
+#     print(Sc[c])
+
+print(Sc[4][7])
+print(Sc[5][8])
+print(Sc[6][6])
+
+print(Rc)
+

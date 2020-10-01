@@ -173,7 +173,7 @@ for i in duracion_clase:
 #print(primeros_bloques)
 #print(primeros_bloques)
 #print(c_id)
-print(bloques_clase[50])
+#print(bloques_clase[50])
 
 
 
