@@ -42,6 +42,40 @@ courses_true = courses_true.to_numpy()
 #Keys (courses_id, config_id, subpart_id, class_id, class_limit, class_parent, room_id, room_penalty)
 courses_room = pd.read_csv('iku-fal17/cursos_room.csv',delimiter=';')
 
+distribucion = pd.read_csv('iku-fal17/distribucion.csv',delimiter=',')
+
+same_atendees_conjunto = [[]]
+not_overlap_conjunto = [[]]
+count_atendees = 0
+count_notoverlap = 0
+for i in distribucion.index :
+    if i  < len(distribucion.index) - 1:
+        if distribucion['type'][i] == 'SameAttendees':
+            same_atendees_conjunto[count_atendees].append(distribucion['class_id'][i])
+        if distribucion['type'][i] == 'NotOverlap':
+            
+            not_overlap_conjunto[count_notoverlap].append(distribucion['class_id'][i])
+            
+
+        if distribucion['class_id'][i] > distribucion['class_id'][i + 1] : 
+            #same_atendees_conjunto[count].append(same_atendees['class_id'][i + 1])
+            
+            if distribucion['type'][i] == 'SameAttendees':
+             
+                same_atendees_conjunto.append([])
+                count_atendees += 1
+            if distribucion['type'][i] == 'NotOverlap':
+                
+             
+                not_overlap_conjunto.append([])
+                count_notoverlap += 1
+
+
+
+     
+print(not_overlap_conjunto)    
+            
+        
 
 #******************Aqui inicia la separacion de conjuntos*********************
 
@@ -165,7 +199,6 @@ for i in duracion_clase:
 
 #print(primeros_bloques)
 #print(primeros_bloques)
-#print(c_id)
 
 
 
