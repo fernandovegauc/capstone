@@ -46,8 +46,10 @@ distribucion = pd.read_csv('iku-fal17/distribucion.csv',delimiter=',')
 
 same_atendees_conjunto = [[]]
 not_overlap_conjunto = [[]]
+same_days_conjunto = [[]]
 count_atendees = 0
 count_notoverlap = 0
+count_samedays = 0
 for i in distribucion.index :
     if i  < len(distribucion.index) - 1:
         if distribucion['type'][i] == 'SameAttendees':
@@ -55,6 +57,9 @@ for i in distribucion.index :
         if distribucion['type'][i] == 'NotOverlap':
             
             not_overlap_conjunto[count_notoverlap].append(distribucion['class_id'][i])
+        if distribucion['type'][i] == 'SameDays':
+            
+            same_days_conjunto[count_samedays].append(distribucion['class_id'][i])
             
 
         if distribucion['class_id'][i] > distribucion['class_id'][i + 1] : 
@@ -69,11 +74,16 @@ for i in distribucion.index :
              
                 not_overlap_conjunto.append([])
                 count_notoverlap += 1
+            if distribucion['type'][i] == 'SameDays':
+            
+            
+                same_days_conjunto.append([])
+                count_samedays += 1
 
 
 
      
-print(not_overlap_conjunto)    
+    
             
         
 
