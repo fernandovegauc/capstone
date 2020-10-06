@@ -9,7 +9,7 @@ m = 62
 #Cantidad de clases
 c = 100
 #Conjunto dias de semana
-S = ['L', 'M', 'W', 'J','V','S','D']
+S = ['L', 'M', 'W', 'J','V','S','D', 'X']
 
 #Cargar Bases de datos
 #Base Salas keys(id,capacity)
@@ -175,6 +175,8 @@ def days_function(semana):
     if semana == 1:
         day = "D"
         return day
+    else:
+        return "X"
 
 for i in courses_time.index:
     

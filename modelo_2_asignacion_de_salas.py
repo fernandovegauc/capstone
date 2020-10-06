@@ -7,10 +7,9 @@ Rc=salas_factibles #diccionario de clases que requieren sala con el formato {lla
 Cr=class_id #lista de id de clases que requieren salas
 C=c_id #lista de id de clases de todas las clases
 Sc=bloques_clase#diccionario de clases que indica sus bloques posibles con el formato {llave de la clase: lista de horarios factibles clase}
-print(len(Cr))
-print(len(C))
-numero_clases_instancia_con_sala=5
-numero_clases_instancia=8
+
+numero_clases_instancia_con_sala=len(Cr)
+numero_clases_instancia=len(C)
 
 #formaremos el conjunto Vc en una lista de listas por ahora ( no sirvio :( )
 # Vc=[]
@@ -22,26 +21,25 @@ numero_clases_instancia=8
 #                 clasec.append(str(Sc[c][s][0])+str(Sc[c][s][1][v]))
 #     Vc.append(clasec)
 #ahora se creará un subconjunto para las patrones que tienen tope de horario con el patrón i
-
-tope=[]
-for cf in Cr[0:numero_clases_instancia_con_sala]:
-    clase=[]
-    for s in range(len(Sc[cf])):#Sc[4] = [['L', [7, 8, 9, 10, 11]], ['M', [7, 8, 9, 10, 11]], ['W', [7, 8, 9, 10, 11]],...]
-        patron=[]
-        dia=Sc[cf][s][0] #asi s tomas los valores s = ['L', [7, 8, 9, 10, 11]]  , despues s = ['M', [7, 8, 9, 10, 11]] , etc
-        modulos=Sc[cf][s][1]
-        #ahora debo ir revisando en todos los patrones y agrego si hay traslape
-        for cprueba in Cr[0:numero_clases_instancia_con_sala]:
-            for sprueba in range(len(Sc[cprueba])):
-                if (dia==Sc[cprueba][sprueba][0]):
-                    contador=0
-                    for m in (Sc[cprueba][sprueba][1]):
-                        if (m in modulos) and (contador==0):#quiere decir que hay calce de horarios
-                             if (cf!=cprueba) or (s!=sprueba):
-                                patron.append([cprueba,sprueba])
-                                contador=contador+1
-        clase.append(patron)
-    tope.append(clase)
+# tope=[]
+# for cf in Cr[0:numero_clases_instancia_con_sala]:
+#     clase=[]
+#     for s in range(len(Sc[cf])):#Sc[4] = [['L', [7, 8, 9, 10, 11]], ['M', [7, 8, 9, 10, 11]], ['W', [7, 8, 9, 10, 11]],...]
+#         patron=[]
+#         dia=Sc[cf][s][0] #asi s tomas los valores s = ['L', [7, 8, 9, 10, 11]]  , despues s = ['M', [7, 8, 9, 10, 11]] , etc
+#         modulos=Sc[cf][s][1]
+#         #ahora debo ir revisando en todos los patrones y agrego si hay traslape
+#         for cprueba in Cr[0:numero_clases_instancia_con_sala]:
+#             for sprueba in range(len(Sc[cprueba])):
+#                 if (dia==Sc[cprueba][sprueba][0]):
+#                     contador=0
+#                     for m in (Sc[cprueba][sprueba][1]):
+#                         if (m in modulos) and (contador==0):#quiere decir que hay calce de horarios
+#                              if (cf!=cprueba) or (s!=sprueba):
+#                                 patron.append([cprueba,sprueba])
+#                                 contador=contador+1
+#         clase.append(patron)
+#     tope.append(clase)
 
 
 
@@ -75,7 +73,7 @@ for c in C[0:numero_clases_instancia]:
     for s in range(len(Sc[c])):#sub indice s es el numero de patron horario factible para clase c.
         for v in (Sc[c][s][1]):#sub indice v es el numero de modulo del patron s factible para clase c.
             y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yc=" + str(c) + ";v=" + Sc[c][s][0]+str(v) + ";s" + str(s))
-
+           
 yr_crs={}
 for c in Cr[0:numero_clases_instancia_con_sala]:
     for r in Rc[c]:#sub indice r es id de la sala factible para la clase s.
@@ -100,17 +98,13 @@ for c in C[0:numero_clases_instancia]:
 # for d in D:
 #     for c in C:
 #         m.addConstr(quicksum(y_cvs[c,v,s] for s in S) <= 1)
+
+
 # # restriccion 5: Los eventos de un mismo dia son consecutivo
 for c in C[0:numero_clases_instancia]:
     for s in range(len(Sc[c])):
-        # print(len(Sc[c]))
-        # print("c=",c)
-        # print(Sc[c])
         vi=Sc[c][s][1][0]
         nvc=len(Sc[c][s][1])
-        #print("Scc=",c,"s=",s)
-        #print(Sc[c][s][1])
-        #print(Sc[c][s][1][1:])
         m.addConstr(quicksum(y_cvs[c, v, s] for v in (Sc[c][s][1][1:]))-(nvc-1)*y_cvs[c, vi, s]==0)
 
 
@@ -129,21 +123,43 @@ for c in C[0:numero_clases_instancia]:
 #                     nvc=5
 #                     nvc=dict....aqui se debe reconocer el parametro nvc
 #                     m.addConstr(quicksum(y_cvs[c,v,s] for v in range(vi+1,vi+nvc) for s in range(so+1,so+nvc)) -(nvc-1)*y_cvs[c,vi,so] == 0)
+
 # restriccion 7: No tener superposicion horaria para las salas, un curso en la sala en ese bloque
 # for r in R:
 #     for s in Sc[]:
 #         m.addConstr(quicksum(yr_crs[c,r,Sc[c][s][1][i]] for c in C for r in R) <= 1)
 
-count=-1
-for c in Cr[0:numero_clases_instancia_con_sala]:
-    count+=1
-    for s in range(len(Sc[c])):
-        for r in Rc[c]:
-            a = yr_crs[c, r, s]
-            for lista in tope[count][s]:
-                if r in Rc[lista[0]]:
-                    a=a+yr_crs[lista[0],r,lista[1]]
-            m.addConstr(a<=1)
+#restriccion 7: No tener superposicion horaria para las salas, un curso en la sala en ese bloque
+
+
+# count=-1
+# for c in Cr[0:numero_clases_instancia_con_sala]:
+#     count+=1   
+#     for s in range(len(Sc[c])):
+#         for r in Rc[c]:
+#             a = yr_crs[c, r, s]
+#             for lista in tope[count][s]:
+#                 if r in Rc[lista[0]]:
+#                     a=a+yr_crs[lista[0],r,lista[1]]
+#             m.addConstr(a<=1)
+
+#Version 2 restriccion 7
+
+for r in Rc:
+ #Dudoso no sabemos si parten    
+    for v in range(1,25):
+        try:
+            m.addConstr(quicksum(yr_crs[c,r,v] for c in Cr[0:numero_clases_instancia_con_sala]) <= 1)
+        except KeyError as e:
+            pass
+            
+
+
+
+
+
+
+
 
 
 
@@ -158,12 +174,15 @@ for c in Cr[0:numero_clases_instancia_con_sala]:
 
 
 
-
 #restriccion 8: Asignar sala a una clase en un bloque horario determinada
 
 for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
     for s in range(len(Sc[c])):
-        m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
+        try:
+
+            m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
+        except KeyError as e:
+            pass 
 
 
 
@@ -208,9 +227,9 @@ m.optimize()
 #for v in m.getVars():
     #print('%s %g' % (v.varName, v.x))
 
-#for v in m.getVars():
- #   if v.x==1:
-       # print('%s %g' % (v.varName, v.x))
+for v in m.getVars():
+   if v.x==1:
+       print('%s %g' % (v.varName, v.x))
 #for v in m.getVars():
  #   if v.x==0:
         #print('%s %g' % (v.varName, v.x))
