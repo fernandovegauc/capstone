@@ -8,8 +8,10 @@ Cr=class_id #lista de id de clases que requieren salas
 C=c_id #lista de id de clases de todas las clases
 Sc=bloques_clase#diccionario de clases que indica sus bloques posibles con el formato {llave de la clase: lista de horarios factibles clase}
 
-numero_clases_instancia_con_sala=len(Cr)
-numero_clases_instancia=len(C)
+numero_clases_instancia_con_sala=10
+numero_clases_instancia=5
+#para probar total usar len(Cr), len(C)
+
 
 #formaremos el conjunto Vc en una lista de listas por ahora ( no sirvio :( )
 # Vc=[]
@@ -42,19 +44,6 @@ numero_clases_instancia=len(C)
 #     tope.append(clase)
 
 
-
-
-
-
-
-
-
-
-
-
-# print(Sc[296])
-# print(Sc[297])
-# print(Sc[350])
 # x_ac={}
 # for a in C:
 #     for c in A:
@@ -68,21 +57,29 @@ numero_clases_instancia=len(C)
 #se crean las variables
 
 m=Model("mip1")
-y_cvs={}
+y_cvs=dict()
 for c in C[0:numero_clases_instancia]:
     for s in range(len(Sc[c])):#sub indice s es el numero de patron horario factible para clase c.
         for v in (Sc[c][s][1]):#sub indice v es el numero de modulo del patron s factible para clase c.
             y_cvs[c,v,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yc=" + str(c) + ";v=" + Sc[c][s][0]+str(v) + ";s" + str(s))
            
-yr_crs={}
+yr_crv=dict()
 for c in Cr[0:numero_clases_instancia_con_sala]:
     for r in Rc[c]:#sub indice r es id de la sala factible para la clase s.
-        for s in range(len(Sc[c])): #sub indice s es el numero de patron horario factible para clase c.
-            yr_crs[c,r,s] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yrc=" + str(c) + ";r=" + str(r) + ";s=" + str(s))
-
+        for v in range(1,25): #estoy creando variables de modulos 1-24, sise que puede que no existan esos modulos pero seran 0, no deberia importar
+            for s in range(len(Sc[c])):
+                if v in Sc[c][s][1]: 
+                    if (c,r,v) in yr_crv.keys():    
+                        pass
+                    else:
+                        yr_crv[c,r,v] = m.addVar(obj=1, vtype=GRB.BINARY, name="Yrc=" + str(c) + ";r=" + str(r) + ";v=" + str(v))
+                        
+                else:
+                    pass
 
 m.update()
-m.ModelSense = GRB.MINIMIZE
+m.setObjective(GRB.MAXIMIZE)
+
 
 #tambien se puede setear el objetivo como m.setObjective(ACA VA LA F.O. que sera enorme, GRB.MINIMIZE)
 #restriccion 1
@@ -106,13 +103,6 @@ for c in C[0:numero_clases_instancia]:
         vi=Sc[c][s][1][0]
         nvc=len(Sc[c][s][1])
         m.addConstr(quicksum(y_cvs[c, v, s] for v in (Sc[c][s][1][1:]))-(nvc-1)*y_cvs[c, vi, s]==0)
-
-
-
-
-
-
-
 
 
 
@@ -144,47 +134,57 @@ for c in C[0:numero_clases_instancia]:
 #             m.addConstr(a<=1)
 
 #Version 2 restriccion 7
+#7)	“No tener superposición horaria para las salas, un curso en la sala en ese bloque”
+##
+Salas = set()
+for x in Rc:
+    for i in Rc[x]:
+        Salas.add(i)
 
-for r in Rc:
- #Dudoso no sabemos si parten    
+
+   
+#  Dudoso no sabemos si parten  
+for r in Salas:
     for v in range(1,25):
         try:
-            m.addConstr(quicksum(yr_crs[c,r,v] for c in Cr[0:numero_clases_instancia_con_sala]) <= 1)
-        except KeyError as e:
+            
+              
+            m.addConstr(quicksum(yr_crv[c,r,v] for c in Cr[0:numero_clases_instancia_con_sala]) <= 1)
+
+        except:
             pass
             
 
 
-
-
-
-
-
-
-
-
-
-
-
         #ahora reviso en los conjuntos c,s con tope para el c y el s actual, procurando revisar si r es factible para el
+##restriccion 7.5 cada curso tiene solo una salita
+#for r in Salas:
+ #   for v in range(1,25):
 
-
-
-
-
+  #      try:
+   #         m.addConstr(quicksum(yr_crv[c,r,v] for c in Cr[0:numero_clases_instancia_con_sala])  == 1)
+    #        print("agrgeada")
+     #   except :
+            
+      #      pass
+      
 
 
 #restriccion 8: Asignar sala a una clase en un bloque horario determinada
 
 for c in Cr[0:numero_clases_instancia_con_sala]: #estas son las clases que requieren sala
-    for s in range(len(Sc[c])):
-        try:
+     for v in range(1,25):
+         # for s in range(len(Sc[c])):
+         #     if v in Sc[c][s][1]: #esta viendo si el modulo pertenece al patron s del curso c 
+         try:
 
-            m.addConstr(quicksum(yr_crs[c,r,s] for r in (Rc[c])) == y_cvs[c,Sc[c][s][1][0],s])
-        except KeyError as e:
-            pass 
-
-
+             m.addConstr(quicksum(yr_crv[c,r,v] for r in (Rc[c])) == quicksum(y_cvs[c,v,s] for s in range(len(Sc[c])))) # nose si el v de y_cvs deberia ser Sc[c][s][1][0] o solamente v
+             print("Im in!")
+         except :
+             pass 
+        # else:
+        #     pass
+#aca deberia relacionar
 
 # # #resgtriccion 9: No hay cambio de sala dentro de un mismo dia
 # #
@@ -228,26 +228,17 @@ m.optimize()
     #print('%s %g' % (v.varName, v.x))
 
 #for v in m.getVars():
- #  if v.x==1:
-  #     print('%s %g' % (v.varName, v.x))
-#for v in m.getVars():
- #   if v.x==0:
-        #print('%s %g' % (v.varName, v.x))
+ ##     print('%s %g' % (v.varName, v.x))
+for v in m.getVars():
+    if v.x==1:
+        print('%s %g' % (v.varName, v.x))
 # #print(S)
 #para obtener el valor de una varibla particular:
 # for v in m.getVars():
 #     if v.varName=="yc1v1s1":
 #         print(v.varName, v.x)
 
-# print(C[0])
-# print(V[1])
-# print(V[40])
-# print(Cr[0:10])
-# print(Rc)
-# print(Rc[272])
-# print(Sc[4])
-# print(len(Sc[4][1][1]))
-#print(C)
+
 # for i in range(20):
 #     print(Sc[i+1])
 # for i in Cr[0:20]:
