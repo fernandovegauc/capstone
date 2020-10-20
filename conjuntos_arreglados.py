@@ -17,7 +17,7 @@ room = pd.read_excel('iku-fal17/room.xls')
 #*******Arreglo de las salas con su id y capacidad*******
 rooms = room.to_numpy()
 
-#Bases Cursos
+#Bases du
 #Cursos_tiempo ****Tiene TODOS los cursos con todas las posibles combinaciones de horario****
 #Keys(course_id, config_id, subpart_id, class_id, class_limit, class_room, class_parent, days, 
 # start length, weeks, penalty)
