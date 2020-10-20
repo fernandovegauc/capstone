@@ -32,6 +32,7 @@ for i in courses_room.index:
 ## diccionario con key class_id y el value es class_limit 
 class_limit = dict()
 for x in courses_time.index:
+    
     class_limit[courses_time['class_id'][x]] = courses_time['class_limit'][x]
 
 ##las keys son los courses_id y por el momento el value es una lista vacía
@@ -75,24 +76,24 @@ for i in classes_room.keys():
 def days_function(semana):
     if semana ==  1000000:
         day = 'L'
-        return day
+        return 1
     if semana == 100000:
         day = 'M'
-        return day
+        return 2
     if  semana == 10000:
-        day = 'W'
+        day = 3
         return day
     if semana == 1000:
-        day = 'J'
+        day = 4
         return day
     if semana == 100:
-        day = 'V'
+        day = 5
         return day
     if semana == 10:
-        day = 'S'
+        day = 6
         return day
     if semana == 1:
-        day = "D"
+        day = 7
         return day
     else:
         return "X"
@@ -100,20 +101,40 @@ def days_function(semana):
 for i in courses_true.index:
         if courses_true['length'][i] == 22 or courses_true['length'][i] == 10:
             if courses_true['start'][i] == 108 :
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 1])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 1)
             elif courses_true['start'][i]  == 132:
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 2])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 2)
             elif courses_true['start'][i]  == 156:
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 3])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 3)
             elif courses_true['start'][i]  == 180:
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 4])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 4)
             elif courses_true['start'][i]  == 204:
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 5])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 5)
             elif courses_true['start'][i]  == 228:
-                patterns[courses_true['class_id'][i]].append([days_function(courses_true['days'][i]), 6])
+                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 6)
 
         if courses_true['length'][i] == 34:
             duration34.add(courses_true['class_id'][i])
 
         if courses_true['length'][i] == 46:
             duration34.add(courses_true['class_id'][i])
+
+
+
+#eliminar keys que estén vacías
+for x in duration34:
+    del salas_factibles[x]
+    del class_limit[x]
+    del classes_room[x]
+    del patterns[x]
+for y in duration46:
+    del salas_factibles[y]
+    del class_limit[y]
+    del classes_room[y]
+    del patterns[y]
+delete = list()
+for i in patterns:
+    if patterns[i] == []:
+        delete.append(i)
+for i in delete:
+    del patterns[i]
