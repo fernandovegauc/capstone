@@ -2,8 +2,9 @@ from gurobipy import *
 from conjuntos_new import *
 import numpy as np
 ## se definen los conjuntos de la manera presentada en el informe
-#conjunto de modulos horarios
-M = patterns
+#conjunto de patrones
+Pc = patterns
+
 #conjunto de salas
 R = rooms
 #conjunto de clases
@@ -26,41 +27,44 @@ C_rf = salas_factibles
 m=Model("mip1")
 ##creación de variable xcpr
 x_cpr=dict()
-for c in C_r:
-    if c in M.keys():
-        for p in M[c]:
+for c in range(1,1500):
+    try:
+        for p in Pc[c]:
             
 
             for r in C_rf[c]:
                 
                 x_cpr[c,p,r] = m.addVar( vtype=GRB.BINARY, name="xc" + str(c) + ";p="  +str(p) + ";r" + str(r))
-            
+    except:
+        pass     
 
 m.update()
 m.setObjective(GRB.MINIMIZE)
 
 
-
 #restricción 1: asignar un patron factible a la clase c con cierta sala
-for c in C_r: #estas son las clases que requieren sala
-   
+for c in range(1,1500): #estas son las clases que requieren sala 
     
     try:
-       
-        m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in M[c]) == 1) 
+        
+        m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in Pc[c] ) == 1) 
     except:
         pass
 
 
 # restricción 2:  cada sala puede tener solo 1 clase en cada m ́odulo
-for r in R:
-    for p in M:
+#for r in R:
+    
+ #   for n in range(1,43):
         
-        try:
+      
+   
+        
+  #      try:
             
-            m.addConstr(quicksum((x_cpr[c,p,r] for c in C)  == 1) )
-        except:
-            pass
+   #         m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r.keys() ) <= 1) 
+    #    except:
+     #       pass
          
 
 
@@ -69,5 +73,6 @@ for r in R:
 m.optimize()
 
 for v in m.getVars():
+    if v.x != 0:
     
-    print(v.varName, v.x)
+        print(v.varName, v.x)

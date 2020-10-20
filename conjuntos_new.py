@@ -132,9 +132,22 @@ for y in duration46:
     del class_limit[y]
     del classes_room[y]
     del patterns[y]
+
+
 delete = list()
 for i in patterns:
     if patterns[i] == []:
         delete.append(i)
 for i in delete:
     del patterns[i]
+delete = list()
+for  x in class_limit.keys():
+    if x not in patterns.keys():
+        delete.append(x)
+for x in delete:
+    try:
+        del class_limit[x]
+        del classes_room[x]
+        del salas_factibles[x]
+    except:
+        pass
