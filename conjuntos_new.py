@@ -96,7 +96,7 @@ def days_function(semana):
         day = 7
         return day
     else:
-        return "X"
+        pass
  #Agregamos patrones posibles
 for i in courses_true.index:
         if courses_true['length'][i] == 22 or courses_true['length'][i] == 10:
@@ -151,3 +151,11 @@ for x in delete:
         del salas_factibles[x]
     except:
         pass
+
+    
+
+
+for x in patterns:
+    patterns[x]= set(patterns[x])
+
+
