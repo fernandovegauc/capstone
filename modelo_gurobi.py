@@ -27,7 +27,7 @@ C_rf = salas_factibles
 m=Model("mip1")
 ##creación de variable xcpr
 x_cpr=dict()
-for c in C_r.keys():
+for c in C_r:
     try:
         for p in Pc[c]:
             
@@ -43,38 +43,30 @@ m.setObjective(GRB.MINIMIZE)
 
 
 #restricción 1: asignar un patron factible a la clase c con cierta sala
-for c in C_r.keys(): #estas son las clases que requieren sala 
-  
+for c in C_r: #estas son las clases que requieren sala 
   
     try:
+   
       
         m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in Pc[c] ) == 1) 
     except:
         pass
 
-
 # restricción 2:  cada sala puede tener solo 1 clase en cada m ́odulo
 for r in R:
-    
-    for n in range(1,43):
+    for n in range(1, 43):
+            m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r if r in C_rf[c] and n in Pc[c])  <= 1)
 
-        try:
-            
-            m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r.keys() ) <= 1) 
-            print('here')
-        except:
-            pass
-         
 
 
 
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
 #m.setParam(GRB.Param.heuristics, 0.5)
-
+print(len(C_r))
 m.optimize()
 
-for v in m.getVars():
+#for v in m.getVars():
    
-    if v.x != 0:
-        print(v.varName, v.x)
+ #   if v.x != 0:
+  #      print(v.varName, v.x)

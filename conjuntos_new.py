@@ -100,19 +100,21 @@ def days_function(semana):
  #Agregamos patrones posibles
 for i in courses_true.index:
         if courses_true['length'][i] == 22 or courses_true['length'][i] == 10:
-            if courses_true['start'][i] == 108 :
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 1)
-            elif courses_true['start'][i]  == 132:
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 2)
-            elif courses_true['start'][i]  == 156:
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 3)
-            elif courses_true['start'][i]  == 180:
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 4)
-            elif courses_true['start'][i]  == 204:
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 5)
-            elif courses_true['start'][i]  == 228:
-                patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 6)
-
+            try:
+                if courses_true['start'][i] == 108 :
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 1)
+                elif courses_true['start'][i]  == 132:
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 2)
+                elif courses_true['start'][i]  == 156:
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 3)
+                elif courses_true['start'][i]  == 180:
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 4)
+                elif courses_true['start'][i]  == 204:
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 5)
+                elif courses_true['start'][i]  == 228:
+                    patterns[courses_true['class_id'][i]].append(days_function(courses_true['days'][i]) * 6)
+            except:
+                pass
         if courses_true['length'][i] == 34:
             duration34.add(courses_true['class_id'][i])
 
@@ -134,17 +136,17 @@ for y in duration46:
     del patterns[y]
 
 
-delete = list()
+delete_patterns = list()
 for i in patterns:
-    if patterns[i] == []:
-        delete.append(i)
-for i in delete:
+    if patterns[i] == [] or len(patterns[i]) == 1:
+        delete_patterns.append(i)
+for i in delete_patterns:
     del patterns[i]
-delete = list()
+delete_all = list()
 for  x in class_limit.keys():
     if x not in patterns.keys():
-        delete.append(x)
-for x in delete:
+        delete_all.append(x)
+for x in delete_all:
     try:
         del class_limit[x]
         del classes_room[x]
@@ -153,9 +155,13 @@ for x in delete:
         pass
 
     
-
+delete_salas = list()
+for x in salas_factibles:
+    if len(salas_factibles[x]) <= 1:
+        delete_salas.append(x)
+for x in delete_salas:
+    del salas_factibles[x]
+    del classes_room[x]
 
 for x in patterns:
     patterns[x]= set(patterns[x])
-
-
