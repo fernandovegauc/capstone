@@ -165,3 +165,48 @@ for x in delete_salas:
 
 for x in patterns:
     patterns[x]= set(patterns[x])
+
+distribucion = pd.read_csv('iku-fal17/distribucion.csv',delimiter=',')
+
+same_atendees_conjunto = [[]]
+not_overlap_conjunto = [[]]
+same_days_conjunto = [[]]
+same_start_conjunto = [[]]
+count_atendees = 0
+count_notoverlap = 0
+count_samedays = 0
+count_samestart = 0
+for i in distribucion.index :
+    if i  < len(distribucion.index) - 1:
+        if distribucion['type'][i] == 'SameAttendees':
+            same_atendees_conjunto[count_atendees].append(distribucion['class_id'][i])
+        if distribucion['type'][i] == 'NotOverlap':
+            
+            not_overlap_conjunto[count_notoverlap].append(distribucion['class_id'][i])
+        if distribucion['type'][i] == 'SameDays':
+            
+            same_days_conjunto[count_samedays].append(distribucion['class_id'][i])
+        
+        if distribucion['type'][i] == 'SameStart':
+            
+            same_start_conjunto[count_samestart].append(distribucion['class_id'][i])
+            
+
+        if distribucion['class_id'][i] > distribucion['class_id'][i + 1] : 
+            #same_atendees_conjunto[count].append(same_atendees['class_id'][i + 1])
+            
+            if distribucion['type'][i] == 'SameAttendees':
+             
+                same_atendees_conjunto.append([])
+                count_atendees += 1
+            if distribucion['type'][i] == 'NotOverlap':
+                
+             
+                not_overlap_conjunto.append([])
+                count_notoverlap += 1
+            if distribucion['type'][i] == 'SameDays':
+            
+            
+                same_days_conjunto.append([])
+                count_samedays += 1
+same_start_conjunto[0].pop(2)

@@ -19,9 +19,8 @@ C_r = classes_room
 C_sr = classes_no_room
 
 C_rf = salas_factibles
-
-
-
+#Cursos que tienen same start
+Cd = same_start_conjunto
 
 
 m=Model("mip1")
@@ -57,16 +56,21 @@ for r in R:
     for n in range(1, 43):
             m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r if r in C_rf[c] and n in Pc[c])  <= 1)
 
-
-
+#Restriccion 5: SAMESTART , que partan al mismo horario
+for l in Cd:
+    for ci in l:
+        for cj in l:
+            if ci != cj:
+                print(ci,cj)
+                m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] for n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] for n in Pc[ci]) ) 
 
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
 #m.setParam(GRB.Param.heuristics, 0.5)
-print(len(C_r))
+#print(len(C_r))
 m.optimize()
 
-#for v in m.getVars():
-   
- #   if v.x != 0:
-  #      print(v.varName, v.x)
+for v in m.getVars():
+  
+    if v.x != 0:
+        print(v.varName, v.x)
