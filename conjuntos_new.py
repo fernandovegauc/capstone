@@ -143,9 +143,11 @@ for i in patterns:
 for i in delete_patterns:
     del patterns[i]
 delete_all = list()
+
 for  x in class_limit.keys():
     if x not in patterns.keys():
         delete_all.append(x)
+
 for x in delete_all:
     try:
         del class_limit[x]
@@ -183,8 +185,9 @@ for i in distribucion.index :
         if distribucion['type'][i] == 'SameAttendees':
             same_atendees_conjunto[count_atendees].append(distribucion['class_id'][i])
         if distribucion['type'][i] == 'NotOverlap':
+            if i in class_limit.keys():
             
-            not_overlap_conjunto[count_notoverlap].append(distribucion['class_id'][i])
+                not_overlap_conjunto[count_notoverlap].append(distribucion['class_id'][i])
         if distribucion['type'][i] == 'SameDays':
             
             same_days_conjunto[count_samedays].append(distribucion['class_id'][i])
@@ -193,7 +196,8 @@ for i in distribucion.index :
             same_start_conjunto[count_samestart].append(distribucion['class_id'][i])
         
         if distribucion['type'][i] == 'Overlap':
-            overlap_conjunto[count_overlap].append(distribucion['class_id'][i])
+            if i in class_limit.keys():
+                overlap_conjunto[count_overlap].append(distribucion['class_id'][i])
 
         if distribucion['class_id'][i] > distribucion['class_id'][i + 1] : 
             #same_atendees_conjunto[count].append(same_atendees['class_id'][i + 1])
@@ -215,9 +219,35 @@ for i in distribucion.index :
             
                 overlap_conjunto.append([])
                 count_overlap += 1
+overlap = list()
 for l in overlap_conjunto:
-    if len(l)==1:
-        overlap_conjunto.remove(l)
-overlap_conjunto.remove([226])
+
+    if len(l) != 1:
+        overlap.append(l)
+        
+        #overlap_conjunto.remove(l)
+#overlap_conjunto.remove([226])
 same_start_conjunto[0].pop(2)
-print(overlap_conjunto)
+
+for x in overlap:
+    
+    for i in x:
+        
+        if i in delete_all:
+            x.remove(i)
+
+for x in not_overlap_conjunto:
+    if len (x) <= 1:
+        not_overlap_conjunto.remove(x)
+for x in not_overlap_conjunto:
+    
+    for i in x:
+        
+        if i in (delete_all ):
+ 
+            x.remove(i)
+not_overlap = list()
+for x in not_overlap_conjunto:
+    if len(x) >= 2:
+        not_overlap.append(x)
+

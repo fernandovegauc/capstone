@@ -1,8 +1,8 @@
 from gurobipy import *
 
 # Patrpnes
-Pc = {1:[1,2,9,10], 2:[2,3,7,10], 3:[1,2,22,30]}
-modulos = [1,2,22,30, 1,2,9,10, 2,3,7,10]
+Pc = {1:[1,2,3,9,10], 2:[2,3,7,10], 3:[1,2,22,30], 4: [1,3,4,6]}
+modulos = [1,2,22,30,4, 1,2,9,10, 2,3,7,10]
 modulos = set(modulos)
 #conjunto de salas
 R = [1,2,3,4,5,6]
@@ -13,10 +13,12 @@ C = [1,2,3]
 C_r = [1, 2, 3]
 # conjunto de clases que no requieren sala dict de key class id y value la capacidad
 C_sr = []
-C_rf = {1: set([1, 2, 4, 6]), 2: set([2, 3]), 3: set([1, 3, 4, 5])}
+C_rf = {1: set([1, 2, 4, 6]), 2: set([2, 3]), 3: set([1, 3, 4, 5]), 4: set([1,3,5])}
 #Curso 1 y 2 no pueden estar en la misma sala
 Cd= [1,2]
 Cd_room = [1,3]
+## not overlap
+Cd_notoverlap = [2,4]
 
 m=Model("mip1")
 
@@ -55,7 +57,7 @@ for ci in Cd:
     for cj in Cd:
         for n in modulos:
             if ci != cj:
-                m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj]) ) 
+                m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj] ) ) 
 
 #Restriccion 6: Overlap, clases se solapan 
 for ci in Cd:
@@ -63,6 +65,13 @@ for ci in Cd:
         for n in modulos:
             if ci != cj:
                 m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj]) ) 
+
+#Restriccion 8: notOverlap, clases se solapan 
+for ci in Cd_notoverlap:
+    for cj in Cd_notoverlap:
+        for n in modulos:
+            if ci != cj:
+                m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if  n in Pc[ci] ) + quicksum(x_cpr[cj,n,r] for r in C_rf[cj] for  p in Pc[cj] if p != n and  n in Pc[cj]) <= 1) 
 
 
  

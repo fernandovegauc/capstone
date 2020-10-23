@@ -21,7 +21,11 @@ C_sr = classes_no_room
 C_rf = salas_factibles
 #Cursos que tienen same start
 Cd = same_start_conjunto
+#cursos que tienen overlap
+Cd_overlap = overlap
 
+
+Cd_notoverlap = [[2448,2463, 2464, 2466]]
 
 m=Model("mip1")
 ##creación de variable xcpr
@@ -66,8 +70,30 @@ for l in Cd:
                 if ci != cj:
     #               if n in Pc[ci] and n in Pc[cj]:
                         m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj])) 
+#Restriccion 7: Overlap
+
+for l in Cd_overlap:
+    for ci in l:
+        for cj in l:
+            for n in modulos:
+    #           for nj in Pc[cj]:
+                if ci != cj:
+    #               if n in Pc[ci] and n in Pc[cj]:
+                        m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj])) 
 
 
+
+#Restriccion 8: notOverlap, clases se solapan 
+for x in Cd_notoverlap:
+    for ci in x:
+        
+        for cj in x:
+            for n in modulos:
+                if ci != cj:
+                    m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if  n in Pc[ci] ) + quicksum(x_cpr[cj,n,r] for r in C_rf[cj] for  p in Pc[cj] if p != n and  n in Pc[cj]) <= 1) 
+
+
+ 
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
 #m.setParam(GRB.Param.heuristics, 0.5)
