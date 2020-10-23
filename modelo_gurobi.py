@@ -67,6 +67,7 @@ for l in Cd:
     #               if n in Pc[ci] and n in Pc[cj]:
                         m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj])) 
 
+
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
 #m.setParam(GRB.Param.heuristics, 0.5)
