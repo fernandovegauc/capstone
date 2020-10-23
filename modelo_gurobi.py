@@ -56,13 +56,16 @@ for r in R:
     for n in range(1, 43):
             m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r if r in C_rf[c] and n in Pc[c])  <= 1)
 
-#Restriccion 5: SAMESTART , que partan al mismo horario
+#Restriccion 5: SAMESTART, que partan al mismo horario
+
 for l in Cd:
     for ci in l:
         for cj in l:
-            if ci != cj:
-                print(ci,cj)
-                m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] for n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] for n in Pc[ci]) ) 
+            for n in modulos:
+    #           for nj in Pc[cj]:
+                if ci != cj:
+    #               if n in Pc[ci] and n in Pc[cj]:
+                        m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if n in Pc[ci]) == quicksum(x_cpr[cj,n,r]for r in C_rf[cj] if n in Pc[cj])) 
 
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
