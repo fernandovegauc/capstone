@@ -1,6 +1,7 @@
 from gurobipy import *
-from conjuntos_new import *
+from conjuntos2 import *
 import numpy as np
+import csv
 ## se definen los conjuntos de la manera presentada en el informe
 #conjunto de patrones
 Pc = patterns
@@ -20,12 +21,12 @@ C_sr = classes_no_room
 
 C_rf = salas_factibles
 #Cursos que tienen same start
-Cd = same_start_conjunto
+##Cd = same_start_conjunto
 #cursos que tienen overlap
-Cd_overlap = overlap
+#Cd_overlap = overlap
 
-
-Cd_notoverlap = [[2448,2463, 2464, 2466]]
+print(len(C_r))
+Cd_notoverlap = [[]]
 
 m=Model("mip1")
 ##creación de variable xcpr
@@ -48,20 +49,21 @@ m.setObjective(GRB.MINIMIZE)
 #restricción 1: asignar un patron factible a la clase c con cierta sala
 for c in C_r: #estas son las clases que requieren sala 
   
-    try:
+   
    
       
-        m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in Pc[c] ) == 1) 
-    except:
-        pass
+    m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in Pc[c] ) == 1) 
+    
 
 # restricción 2:  cada sala puede tener solo 1 clase en cada m ́odulo
 for r in R:
-    for n in range(1, 43):
+    for n in range(1, 84):
+        try:
             m.addConstr(quicksum(x_cpr[c,n,r] for c in C_r if r in C_rf[c] and n in Pc[c])  <= 1)
-
+        except:
+            pass
 #Restriccion 5: SAMESTART, que partan al mismo horario
-
+'''
 for l in Cd:
     for ci in l:
         for cj in l:
@@ -92,7 +94,7 @@ for x in Cd_notoverlap:
                 if ci != cj:
                     m.addConstr(quicksum(x_cpr[ci,n,r] for r in C_rf[ci] if  n in Pc[ci] ) + quicksum(x_cpr[cj,n,r] for r in C_rf[cj] for  p in Pc[cj] if p != n and  n in Pc[cj]) <= 1) 
 
-
+'''
  
 #m.feasRelaxS(0, True, False, True)
 #m.setParam(GRB.Param.InfUnbdInfo, 1)
@@ -100,7 +102,23 @@ for x in Cd_notoverlap:
 #print(len(C_r))
 m.optimize()
 
-for v in m.getVars():
+#for v in m.getVars():
   
-    if v.x != 0:
-        print(v.varName, v.x)
+ #   if v.x != 0:
+  #      print(v.varName, v.x)
+
+
+
+var_names = []
+
+for var in m.getVars():
+     if var.x != 0:
+        
+        print(var.varName, var.x)
+
+# Write to csv
+with open('testout.csv', 'w') as myfile:
+    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+    wr.writerows(zip(var_names))
+
+

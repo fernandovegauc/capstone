@@ -1,5 +1,5 @@
 from gurobipy import *
-from conjuntos_arreglados import *
+from conjuntos2 import *
 import numpy as np
 
 
