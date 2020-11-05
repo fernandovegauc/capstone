@@ -52,9 +52,11 @@ salas_factibles = dict()
 ##SALAS FACTIBLES PERO SIN SEPARACIÓN DE clases_salas_factibles = dict()
 class_id = courses_room['class_id']
 class_id = np.unique(class_id)
+count = 0
 for x in class_id:
-    if x in impares:
+    if x in impares and count < 600:
         salas_factibles[x] = []
+        count += 1
 for i in courses_room.index:
     try:
         salas_factibles[courses_room['class_id'][i]].append(courses_room['room_id'][i])
@@ -85,12 +87,13 @@ courses_true = courses_time[(courses_time['class_room']!=False)]
 courses_true = courses_true.drop(['class_room'], axis = 1)
 classes_room = dict()
 #print(class_id)
-
+count = 0
 for x in class_id:
  
-    if x in impares:
-        classes_room[x] = set()
+    if x in impares and count < 600:
 
+        classes_room[x] = set()
+        count += 1
 for x in courses_true.index:
    
     try:
@@ -265,7 +268,7 @@ for x in delete_all:
 
 delete_salas = list()
 for x in salas_factibles:
-    if len(salas_factibles[x]) <= 1:
+    if len(salas_factibles[x]) <= 3:
         delete_salas.append(x)
 for x in delete_salas:
     del salas_factibles[x]
@@ -281,3 +284,4 @@ same_days_conjunto = [[]]
 overlap_conjunto = [[]]
 
 
+print(len(classes_room))
