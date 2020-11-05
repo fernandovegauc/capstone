@@ -198,6 +198,15 @@ for i in courses_true.index:
         if courses_true['class_length'][i] == 10:
             duration10.add(courses_true['class_id'][i])
 
+#Hacer diccionarios con estudiantes
+students = dict()
+for x in estudiantes['student_id']:
+    students[x] = set()
+for x in estudiantes.index:
+    students[estudiantes['student_id'][x]].add(estudiantes['course_id'][x])
+
+#Filtrar por clases que no sde pueden tomar
+
 
 
 #eliminar keys que estén vacías
