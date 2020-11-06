@@ -24,6 +24,11 @@ C_rf = salas_factibles
 ##Cd = same_start_conjunto
 #cursos que tienen overlap
 #Cd_overlap = overlap
+#Conjunto de estudiantes que contiene el ID del estudiante y los cursos que debe tomas son los value
+Students = students
+#Zw conjunto de subpartes de la configuración
+#Cl conjunto de clases de la subparte
+
 
 print(len(C_r))
 Cd_notoverlap = [[]]
@@ -40,7 +45,13 @@ for c in C_r:
                 
                 x_cpr[c,p,r] = m.addVar( vtype=GRB.BINARY, name="xc" + str(c) + ";p="  +str(p) + ";r" + str(r))
     except:
-        pass     
+        pass  
+
+#Creacion de variable ysc, toma 1 si el estudiante s toma el curso
+y_sc=dict()
+for s in Students:
+    for c in C_r:
+        y_sc[s,c] = m.addVar( vtype=GRB.BINARY, name="ys=" + str(s) + ";c="  +str(c) )        
 
 m.update()
 m.setObjective(GRB.MINIMIZE)

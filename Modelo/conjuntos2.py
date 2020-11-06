@@ -127,9 +127,11 @@ duration106 = set()
 duration10 = set()
 ##conjunto de patrones factibles para la clase c que tiene SALA
 patterns = dict()
+penalty_patterns = dict()
 #Rellenamos diccionarios con id de clases con sala
 for i in classes_room.keys():
     patterns[i] = []
+    penalty_patterns [i] = []
 
 
 ##función que cambia los numeros por letras
@@ -159,29 +161,37 @@ def days_function(semana):
         pass
 
 
-#Agregamos patrones posibles
+#Agregamos patrones posibles 
+#Además penalidedes de los patrones entrar por curso y obtener [patron, penalidad]
 for i in courses_true.index:
         if courses_true['class_length'][i] == 22  :
             try:
                 if courses_true['class_start'][i] == 96 :
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 1)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 1,courses_true['class_penalty'][i]])
                
                 elif courses_true['class_start'][i]  == 120:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 2)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 2,courses_true['class_penalty'][i]])
                 elif courses_true['class_start'][i]  == 144:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 3)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 3,courses_true['class_penalty'][i]])
                 
                 elif courses_true['class_start'][i]  == 168:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 4)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 4,courses_true['class_penalty'][i]])
                 
                 elif courses_true['class_start'][i]  == 192:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 5)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 5,courses_true['class_penalty'][i]])
                 
                 elif courses_true['class_start'][i]  == 216:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 6)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 6,courses_true['class_penalty'][i]])
                 
                 elif courses_true['class_start'][i]  == 240:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 7)
+                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 7,courses_true['class_penalty'][i]])
             except:
                 pass
         if courses_true['class_length'][i] == 34:
@@ -198,16 +208,41 @@ for i in courses_true.index:
         if courses_true['class_length'][i] == 10:
             duration10.add(courses_true['class_id'][i])
 
+
+##################################STUDENTS######################################################
 #Hacer diccionarios con estudiantes
+#Conjunto ks de cursos que debe tomar el estudiante
 students = dict()
 for x in estudiantes['student_id']:
     students[x] = set()
 for x in estudiantes.index:
     students[estudiantes['student_id'][x]].add(estudiantes['course_id'][x])
+#Zw conjunto de subpartes de la configuración -> se modifico a course_id y subparte respectiva porque 
+#todos los cursos solo tienen una configuración (EXCEPTO EL 37)
+zw = dict()
+for x in course_id:
+    zw[x] = set()
+for y in courses_time.index:
+    zw[courses_time['course_id'][y]].add(courses_time['subpart_id'][y])
+#Cl conjunto de clases de la subparte
+cl= dict()
+for x in courses_time['subpart_id']:
+    cl[x] = set()
+for y in courses_time.index:
+    cl[courses_time['subpart_id'][y]].add(courses_time['class_id'][y])
+#Sk conjunto de estudiantes que deben asistir al curso k
+sk = dict()
+for x in course_id:
+    sk[x] = set()
 
-#Filtrar por clases que no sde pueden tomar
+for x in students.keys():
+     for y in course_id:
+        if y in students[x]:
+             sk[y].add(x)
 
 
+#################################DELETE########################################################
+#Filtrar por clases que NO pueden tomar los estudiantes
 
 #eliminar keys que estén vacías
 for x in duration34:
@@ -291,6 +326,3 @@ not_overlap_conjunto = [[]]
 same_days_conjunto = [[]]
 #same_room_conjunto = [[]]
 overlap_conjunto = [[]]
-
-
-print(len(classes_room))
