@@ -60,9 +60,6 @@ m.setObjective(GRB.MINIMIZE)
 #restricción 1: asignar un patron factible a la clase c con cierta sala
 for c in C_r: #estas son las clases que requieren sala 
   
-   
-   
-      
     m.addConstr(quicksum(x_cpr[c,p,r] for r in C_rf[c] for p in Pc[c] ) == 1) 
     
 

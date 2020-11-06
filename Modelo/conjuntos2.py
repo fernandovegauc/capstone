@@ -208,10 +208,17 @@ for i in courses_true.index:
         if courses_true['class_length'][i] == 10:
             duration10.add(courses_true['class_id'][i])
 
+# diccionario de clases y sus padres key class_id value parent_id 
+df_clean= courses_time[courses_time.class_parent.notnull()]
+parent = dict()
+for i in df_clean.index:
+    parent[df_clean['class_id'][i]] =int(df_clean['class_parent'][i])
+
 
 ##################################STUDENTS######################################################
 #Hacer diccionarios con estudiantes
 #Conjunto ks de cursos que debe tomar el estudiante
+#llave del diccionario id de estudiante, valores son los id de los cursos.
 students = dict()
 for x in estudiantes['student_id']:
     students[x] = set()
@@ -239,6 +246,7 @@ for x in students.keys():
      for y in course_id:
         if y in students[x]:
              sk[y].add(x)
+
 
 
 #################################DELETE########################################################

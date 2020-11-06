@@ -28,26 +28,28 @@ Cl = {1:[1, 2, 3],2:[2],3:[3,4],4:[5,6,7],5:[8]}
 Zw = {1:[1,2, 4], 2:[3], 3:[4,5]}
 #Sk conjunto de estudiantes que deben asistir al curso k
 Sk = {1:[1, 3, 4],2:[1, 2 ],3:[2, 3, 5]}
+parents = {2: [1]}
+class_limit = {1: 10,2:10,3:10,4:10,5: 10,6: 10 ,7:10 ,8:10}
 
 m=Model("mip1")
-'''
+
 ##creación de variable Xcrp
-x_cpr=dict()
+"""x_cpr=dict()
 for c in C_r:
     for p in Pc[c]:
         for r in C_rf[c]:    
             x_cpr[c,p,r] = m.addVar( vtype=GRB.BINARY, name="xc=" + str(c) + ";p="  +str(p) + ";r" + str(r))
-'''
-##Creacion de variable Ycs
+"""
+##Creacion de variable Ycs, hacer forma mas eficiente entregando id de estudiante entregar cursos posible
 y_sc=dict()
 for s in students:
     for c in C_r:
         y_sc[s,c] = m.addVar( vtype=GRB.BINARY, name="ys=" + str(s) + ";c="  +str(c) ) 
         
-b_sw = dict()
+"""b_sw = dict()
 for s in students:
     for w in Zw:
-         y_sc[s,w] = m.addVar( vtype=GRB.BINARY, name="bs=" + str(s) + ";w="  +str(w) )                 
+         y_sc[s,w] = m.addVar( vtype=GRB.BINARY, name="bs=" + str(s) + ";w="  +str(w) )  """               
  
 m.update()
 m.setObjective(GRB.MINIMIZE)
@@ -60,13 +62,24 @@ for s in students:
             for subparte in Zw[k]:
                 m.addConstr(quicksum(y_sc[s,c] for c in Cl[subparte]) == 1) 
             
+#4. Numero de alumnos que asisten a n la clase no puede exceder la capacidad de la clase.
+# Class_id en gurobi como -> C 
+for c in C_r:
+    m.addConstr(quicksum(y_sc[s,c] for s in students) <= class_limit[c])            
                 
-                
-                
+#5. Si el alumno asite a un a clase que tiene una clase padre, entonces tambien debe asitir a la clase padre
 for s in students:
-    for k in K:
-        if k in students[k]:
-            m.addConstr(quicksum(b_sw[s,w] for w in Zw[k]) == 1)
+    for ci in C_r:
+        if ci in parents.keys():
+            for cj in parents[ci]:
+                m.addConstr(y_sc[s,ci] <= y_sc[s,cj]) 
+    
+
+                
+# for s in students:
+#     for k in K:
+#         if k in students[k]:
+#             m.addConstr(quicksum(b_sw[s,w] for w in Zw[k]) == 1)
 
 
 '''
