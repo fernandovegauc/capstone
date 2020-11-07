@@ -28,7 +28,7 @@ Cl = {1:[1, 2, 3],2:[2],3:[3,4],4:[5,6,7],5:[8]}
 Zw = {1:[1,2, 4], 2:[3], 3:[4,5]}
 #Sk conjunto de estudiantes que deben asistir al curso k
 Sk = {1:[1, 3, 4],2:[1, 2 ],3:[2, 3, 5]}
-parents = {2: [1]}
+parents = {4: 5}
 class_limit = {1: 10,2:10,3:10,4:10,5: 10,6: 10 ,7:10 ,8:10}
 
 m=Model("mip1")
@@ -71,8 +71,7 @@ for c in C_r:
 for s in students:
     for ci in C_r:
         if ci in parents.keys():
-            for cj in parents[ci]:
-                m.addConstr(y_sc[s,ci] <= y_sc[s,cj]) 
+                m.addConstr(y_sc[s,ci] <= y_sc[s,parents[ci]]) 
     
 
                 

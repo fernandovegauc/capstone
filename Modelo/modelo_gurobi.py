@@ -30,6 +30,7 @@ Students = students
 #Cl conjunto de clases de la subparte
 
 
+
 print(len(C_r))
 Cd_notoverlap = [[]]
 

@@ -646,3 +646,111 @@ Solution count 0
 
 Model is infeasible
 Best objective -, best bound -, gap -
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:22:51 2020
+
+Optimize a model with 30 rows, 40 columns and 87 nonzeros
+Variable types: 0 continuous, 40 integer (40 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+01]
+Presolve removed 21 rows and 37 columns
+Presolve time: 0.00s
+
+Explored 0 nodes (0 simplex iterations) in 0.00 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 0
+
+Model is infeasible
+Best objective -, best bound -, gap -
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:24:07 2020
+
+Optimize a model with 30 rows, 40 columns and 87 nonzeros
+Variable types: 0 continuous, 40 integer (40 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+01]
+Found heuristic solution: objective 1.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.00 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 1 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.000000000000e+00, best bound 1.000000000000e+00, gap 0.0000%
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:26:39 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:26:50 2020
+
+Optimize a model with 30 rows, 40 columns and 87 nonzeros
+Variable types: 0 continuous, 40 integer (40 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+01]
+Found heuristic solution: objective 1.0000000
+
+Explored 0 nodes (0 simplex iterations) in 0.00 seconds
+Thread count was 1 (of 4 available processors)
+
+Solution count 1: 1 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.000000000000e+00, best bound 1.000000000000e+00, gap 0.0000%
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:34:07 2020
+
+Optimize a model with 0 rows, 343740 columns and 0 nonzeros
+Variable types: 0 continuous, 343740 integer (343740 binary)
+Coefficient statistics:
+  Matrix range     [0e+00, 0e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [0e+00, 0e+00]
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:39:59 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:40:58 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:42:33 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:44:45 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:45:34 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:46:42 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:47:59 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:48:53 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:49:26 2020
+
+
+Gurobi 8.0.1 (mac64, Python) logging started Fri Nov  6 22:50:41 2020
+
+Optimize a model with 36469 rows, 901475 columns and 729612 nonzeros
+Variable types: 0 continuous, 901475 integer (901475 binary)
+Coefficient statistics:
+  Matrix range     [1e+00, 1e+00]
+  Objective range  [0e+00, 0e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 6e+02]
