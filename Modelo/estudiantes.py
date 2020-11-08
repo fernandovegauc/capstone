@@ -38,31 +38,36 @@ m=Model("modelo estudiantes")
 y_sc=dict()
 for s in students:
     for c in range(1, 536):
-        y_sc[s,c] = m.addVar( vtype=GRB.BINARY, name="ys=" + str(s) + ";c="  +str(c) ) 
+        y_sc[s,c] = m.addVar(obj = 1 , vtype=GRB.BINARY, name="ys=" + str(s) + ";c="  +str(c) ) 
 
 
            
 
 m.update()
-m.setObjective(GRB.MINIMIZE)
+obj = quicksum((y_sc[s,c] for s in students for c in range(1,536)))
+m.setObjective(obj, GRB.MINIMIZE)
 ##############################RESTRICCIONES####################################
 
 #1. Los estudiantes deben asistir a una clase de la subparte
 for s in students:
     for k in K:
         if k in students[s]:
+          
             for subparte in zw[k]:
-                try:
-                    m.addConstr(quicksum(y_sc[s,c] for c in cl[subparte]) == 1) 
-                except:
-                    pass
+            
+           
+                m.addConstr(quicksum(y_sc[s,c] for c in cl[subparte]) == 1) 
+       
+           
+          
 
 #4. Numero de alumnos que asisten a n la clase no puede exceder la capacidad de la clase.
 # Class_id en gurobi como -> C 
-for c in C:
-    m.addConstr(quicksum(y_sc[s,c] for s in students) <= class_limit[c])            
+for c in range(1,536):
+    m.addConstr(quicksum(y_sc[s,c] for s in students) <= class_limit_s[c])            
                 
 #5. Si el alumno asite a un a clase que tiene una clase padre, entonces tambien debe asitir a la clase padre
+
 for s in students:
     for ci in C:
         if ci in parent.keys():
@@ -72,12 +77,12 @@ for s in students:
 m.optimize()
 
 var_names = []
-
+'''
 for var in m.getVars():
      if var.x != 0:
         
         print(var.varName, var.x)
 
 
-
+'''
 

@@ -30,12 +30,13 @@ Students = students
 #Cl conjunto de clases de la subparte
 
 
+print(room_penalty)
 
-print(len(C_r))
 Cd_notoverlap = [[]]
 
 m=Model("mip1")
 ##creación de variable xcpr
+##sala penalidad
 x_cpr=dict()
 for c in C_r:
     try:
@@ -43,19 +44,24 @@ for c in C_r:
             
 
             for r in C_rf[c]:
+               
+              
+                for l in room_penalty[c]:
+                    if l[0] == r:
+                        print('hola')
+                        val = l[1]
+
                 
-                x_cpr[c,p,r] = m.addVar( vtype=GRB.BINARY, name="xc" + str(c) + ";p="  +str(p) + ";r" + str(r))
+                x_cpr[c,p,r] = m.addVar( obj = val , vtype=GRB.BINARY, name="xc" + str(c) + ";p="  +str(p) + ";r" + str(r))
     except:
         pass  
 
 #Creacion de variable ysc, toma 1 si el estudiante s toma el curso
-y_sc=dict()
-for s in Students:
-    for c in C_r:
-        y_sc[s,c] = m.addVar( vtype=GRB.BINARY, name="ys=" + str(s) + ";c="  +str(c) )        
+
 
 m.update()
-m.setObjective(GRB.MINIMIZE)
+
+m.setObjective(quicksum(( x_cpr[c,p, r] for c in C_r for p in Pc[c] for r in C_rf[c])), GRB.MINIMIZE)
 
 
 #restricción 1: asignar un patron factible a la clase c con cierta sala
@@ -119,7 +125,7 @@ m.optimize()
 
 
 var_names = []
-
+'''
 for var in m.getVars():
      if var.x != 0:
         
@@ -131,3 +137,4 @@ with open('testout.csv', 'w') as myfile:
     wr.writerows(zip(var_names))
 
 
+'''
