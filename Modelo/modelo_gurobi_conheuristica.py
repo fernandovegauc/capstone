@@ -252,20 +252,7 @@ for i in patterns106:
                     listo=1
         except:
             pass
-print("Numeros")
-print(len(patterns10))
-print(cuenta10)
-print(len(patterns34))
-print(cuenta34)
-print(len(patterns46))
-print(cuenta46)
-print(len(patterns58))
-print(cuenta58)
-print(len(patterns106))
-print(cuenta106)
 
-print("numero clases asignadas")
-print(len(asignado))
 
 #Algoritmo heuristica de asignacion clases con 1 patron factible
 #las clases_room es la salas es la key y el value es su capacidad
@@ -308,9 +295,9 @@ for i in one_room: #i=1 (la clase 1 solo tiene la sala 190 factible)
 # print(len(one_room))
 # print(cuenta1)
 #
-# print("numero clases asignadas")
-# print(len(asignado))
-# print(len(asignado)-ahora)
+print("numero clases asignadas")
+print(len(asignado))
+print(len(asignado)-ahora)
 
 
 
