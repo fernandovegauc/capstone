@@ -49,11 +49,15 @@ for x in clases_impares.index:
 
 ##creamos las salas factibles para cada clase
 salas_factibles = dict()
+## Creamos el diccionario que contiene las penalidades de escoger una sala
+###Key: Id clase ; Values: [sala, penalidad]
+penalty_room=dict()
 ##SALAS FACTIBLES PERO SIN SEPARACIÓN DE clases_salas_factibles = dict()
 class_id = courses_room['class_id']
 class_id = np.unique(class_id)
 count = 0
 for x in class_id:
+    penalty_room[x] = {}
     if x in impares and count < 600:
         salas_factibles[x] = []
         count += 1
@@ -62,7 +66,11 @@ for i in courses_room.index:
         salas_factibles[courses_room['class_id'][i]].append(courses_room['room_id'][i])
     except:
         pass
-
+for i in courses_room.index:
+    try:
+        penalty_room[courses_room['class_id'][i]][courses_room['room_id'][i]] = courses_room['room_penalty'][i] 
+    except:
+        pass
 
 ## diccionario con key class_id y el value es class_limit 
 class_limit = dict()
@@ -131,7 +139,7 @@ penalty_patterns = dict()
 #Rellenamos diccionarios con id de clases con sala
 for i in classes_room.keys():
     patterns[i] = []
-    penalty_patterns [i] = []
+    penalty_patterns [i] = {}
 
 
 ##función que cambia los numeros por letras
@@ -168,30 +176,29 @@ for i in courses_true.index:
             try:
                 if courses_true['class_start'][i] == 96 :
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 1)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 1,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i])*1] = courses_true['class_penalty'][i]
                
                 elif courses_true['class_start'][i]  == 120:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 2)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 2,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 2] =courses_true['class_penalty'][i]
                 elif courses_true['class_start'][i]  == 144:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 3)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 3,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 3] =courses_true['class_penalty'][i]
                 
                 elif courses_true['class_start'][i]  == 168:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 4)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 4,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 4] =courses_true['class_penalty'][i]
                 
                 elif courses_true['class_start'][i]  == 192:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 5)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 5,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 5] =courses_true['class_penalty'][i]
                 
                 elif courses_true['class_start'][i]  == 216:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 6)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 6,courses_true['class_penalty'][i]])
-                
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 6] =courses_true['class_penalty'][i]
                 elif courses_true['class_start'][i]  == 240:
                     patterns[courses_true['class_id'][i]].append(days_function(courses_true['class_days'][i]) * 7)
-                    penalty_patterns[courses_true['class_id'][i]].append([days_function(courses_true['class_days'][i]) * 7,courses_true['class_penalty'][i]])
+                    penalty_patterns[courses_true['class_id'][i]][days_function(courses_true['class_days'][i]) * 7] =courses_true['class_penalty'][i]
             except:
                 pass
         if courses_true['class_length'][i] == 34:

@@ -5,7 +5,9 @@ import csv
 ## se definen los conjuntos de la manera presentada en el informe
 #conjunto de patrones
 Pc = patterns
-
+#penalidades por horario
+P_t = penalty_patterns
+P_r = penalty_room
 #conjunto de salas
 R = rooms
 #conjunto de clases
@@ -61,7 +63,7 @@ for c in C_r:
 
 m.update()
 
-m.setObjective(quicksum(( x_cpr[c,p, r] for c in C_r for p in Pc[c] for r in C_rf[c])), GRB.MINIMIZE)
+m.setObjective(quicksum(x_cpr[c,p,r]*(P_t[c][p]+3*P_r[c][r]) for c in C_r for r in C_rf[c] for p in Pc[c]), GRB.MINIMIZE)
 
 
 #restricción 1: asignar un patron factible a la clase c con cierta sala
