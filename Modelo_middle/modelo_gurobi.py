@@ -1,5 +1,5 @@
 from gurobipy import *
-from conjuntos2 import *
+from conjuntos_middle import *
 import numpy as np
 import csv
 ## se definen los conjuntos de la manera presentada en el informe
@@ -18,8 +18,10 @@ C = class_limit.keys()
 K = courses
 #conjunto de clases que erequieren sala, dict de key class id y value la capacidad
 C_r = classes_room
+
 # conjunto de clases que no requieren sala dict de key class id y value la capacidad
 C_sr = classes_no_room
+
 
 C_rf = salas_factibles
 #Cursos que tienen same start
@@ -32,7 +34,7 @@ Students = students
 #Cl conjunto de clases de la subparte
 
 
-print(room_penalty)
+#print(room_penalty)
 
 Cd_notoverlap = [[]]
 
@@ -117,17 +119,16 @@ for x in Cd_notoverlap:
 #m.setParam(GRB.Param.heuristics, 0.5)
 #print(len(C_r))
 m.optimize()
-'''
+count=0
 for v in m.getVars():
   
     if v.x != 0:
-        
-        print(v.varName, v.x)
-
-
+        count+=1
+        #print(v.varName, v.x)
+print(count)
 
 var_names = []
-'''
+
 '''
 for var in m.getVars():
      if var.x != 0:

@@ -77,12 +77,12 @@ for s in students:
 m.optimize()
 
 var_names = []
-'''
+
 for var in m.getVars():
      if var.x != 0:
         
         print(var.varName, var.x)
 
 
-'''
+
 
